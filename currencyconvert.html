@@ -1,0 +1,159 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+     <meta charset="UTF-8">
+     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+     <title>cc</title>
+     <link rel="stylesheet" href="bootstrap/css/bootstrap.min.css">
+     <style>
+     body{
+     display: flex;
+     justify-content: center;
+     align-items: center;
+     height: 100vh;
+     width: 100vw;
+}
+.container{
+     background-color: brown;
+     height: 60%;
+     width: 30%;
+     border-radius: 20px;
+}
+
+input,select{
+     width: 100%;
+}
+h1{
+     text-align: center;
+     color: chocolate;
+}
+button{
+     width: 100%;
+}
+
+h1{
+     border-radius: 50px;
+}
+     </style>
+</head>
+<body>
+     <div class="container">
+          <h1 class="text-primary-emphasis text-bg-light my-1 pb-2">currency convertor</h1>
+          <div class="row  justify-content-center  my-5 gx-2">
+               <div class="col-6 ">
+               <select name="" id="" class="select">
+                    <option value="1" id="op1">From</option>
+               </select>
+          </div>
+          <div class="col-6 ">
+               <select name="" id="" class="select">
+                    <option value="1"  id="op2">To</option>
+               </select>
+          </div>
+          </div>
+          <div class="row my-md-3 my-sm-2 justify-content-center">
+               <div class="col-6">
+                    <input type="number" name="" id="inp1">
+               </div>
+               <div class="col-6">
+                    <input type="number" name="" id="inp2">
+               </div>
+          </div>
+     
+               <div class="row">
+                    <div class="col" id="al">
+                         
+                         <h5 id="err"  class="alert alert-dismissible fade show "></h5>
+                    
+                    </div>
+               </div>
+                   
+                   
+     
+          <div class="row   justify-content-center gx-2 my-2">
+               <div class="col-6">
+                    <button type="submit">convert</button>
+               </div>
+               <div class="col">
+                    <button type="reset" id="reset">reset</button>
+               </div>
+          </div>
+          
+     </div>
+     <script >
+          var select = document.querySelectorAll('.select');
+          let inp1 = document.getElementById('inp1');
+          let inp2;
+          console.log(select)
+          async  function cc(){
+         const country = await fetch('https://api.frankfurter.app/currencies');
+         const json = await country.json();
+        var arr=[] ;
+        //convert a array
+        for(let key in  json){
+        arr.push([key]);
+        }
+        
+        arr.forEach((element,index)=>{
+        let  opt = document.createElement('option'); 
+       
+          opt.value+=arr[index];
+          opt.innerHTML += arr[index];
+           select[0].appendChild(opt); 
+           
+           
+     })
+     arr.forEach((element,index)=>{
+          let  opt = document.createElement('option'); 
+     //     console.log(index);
+         opt.value+=arr[index];
+          opt.innerHTML += arr[index];
+          select[1].appendChild(opt);
+      
+     })
+     }        
+     cc();
+     //eventlisterner fot convert btn
+     let btn = document.querySelector('button');
+     btn.addEventListener('click',convertion);
+
+     function convertion(){
+       let c1 =select[0].value;
+       let c2 =select[1].value;
+      let ip1 =  inp1.value;
+      console.log(ip1=="")
+      if(c1==c2){ 
+         document.getElementById('err').textContent="sorry!! countries are same";
+       let alert=  document.getElementById('err');
+       alert.className="alert alert-info"
+       
+      }
+      else if(ip1==""){
+          document.getElementById('err').textContent="please enter value";
+       let alert=  document.getElementById('err');
+       alert.className="alert alert-info"
+      }
+      else{
+          const host = 'api.frankfurter.app';
+        fetch(`https://${host}/latest?amount=${ip1}&from=${c1}&to=${c2}`)
+         .then(resp => resp.json())
+        .then((data) => { 
+          document.getElementById('inp2').value= Object.values(data.rates)[0]
+         
+  })
+      }
+      
+     }
+     //reset btn
+    let res = document.getElementById('reset');
+    res.addEventListener('click',()=>{
+     inp1.value='';
+     document.getElementById('inp2').value='';
+     document.getElementById('al').removeChild(err)
+     alert.className="div";
+    })
+
+     </script>
+   
+</body>
+</html>
